@@ -1,3 +1,4 @@
+
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
@@ -23,6 +24,7 @@ export function validate(
 
       return res.status(400).json({
         success: false,
+        data: null,
         error: {
           code: 'VALIDATION_ERROR',
           message: 'Request validation failed',
@@ -32,7 +34,14 @@ export function validate(
     }
 
     req.body = result.data.body ?? req.body;
-    req.query = result.data.query ?? req.query;
+
+    Object.defineProperty(req, 'query', {
+      value: result.data.query ?? req.query,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
+
     req.params = result.data.params ?? req.params;
 
     next();
