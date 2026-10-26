@@ -5,11 +5,6 @@ import { prisma } from '../lib/prisma';
 
 const router = Router();
 
-// Health check
-router.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
-});
-
 // Get documents belonging to the authenticated user
 router.get('/', authenticate, async (req, res, next) => {
   try {
@@ -17,11 +12,14 @@ router.get('/', authenticate, async (req, res, next) => {
       where: { userId: req.user!.id },
     });
 
-    res.json(docs);
+    res.status(200).json({
+      success: true,
+      data: docs,
+      error: null,
+    });
   } catch (error) {
     next(error);
   }
 });
-
 export default router;
 

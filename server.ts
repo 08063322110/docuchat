@@ -1,13 +1,8 @@
-import express from 'express';
 
-export const app = express();
-app.use (express.json());
+import app from './src/app';
 
-app.get('/', (req,res) => {
-    res.send('hello world');
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`DocuChat server running on port ${PORT}`);
 });
-
-app.listen (3000, () => {
-    console.log('i am listening on port 3000')
-})
-app.listen()
