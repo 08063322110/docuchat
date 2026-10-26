@@ -14,6 +14,7 @@ import crypto from 'node:crypto';
 // ── Register ────────────────────────────────────────────────
 
 export async function register(data: {
+  name: string;
   email: string;
   password: string;
 }) {

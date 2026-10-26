@@ -12,9 +12,3 @@ export function authorize(...allowedRoles: string[]) {
   };
 }
 
-// Usage:
-router.delete('/admin/users/:id',
-  authenticate,
-  authorize('enterprise'),
-  deleteUserHandler
-);

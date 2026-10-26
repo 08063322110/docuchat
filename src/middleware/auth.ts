@@ -19,7 +19,11 @@ export function authenticate(
     return res.status(401).json({ error: 'No token provided' });
   }
 
-  const token = header.split(' ')[1];
+ const token = header.slice(7).trim();
+
+if (!token) {
+  return res.status(401).json({ error: 'No token provided' });
+}
 
   try {
     const payload = verifyAccessToken(token);
