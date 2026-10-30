@@ -2,7 +2,10 @@
 import { Router } from 'express';
 import { authenticate } from '../middleware/auth';
 import { validate } from '../middleware/validate';
-import { prisma } from '../lib/prisma';
+import {
+  listConversations,
+  createConversation,
+} from '../services/conversation.service';
 import { createConversationSchema } from '../validators/conversation.validator';
 
 const router = Router();
@@ -23,11 +26,7 @@ const router = Router();
  */
 router.get('/', authenticate, async (req, res, next) => {
   try {
-    const conversations = await prisma.conversation.findMany({
-      where: { userId: req.user!.id },
-      orderBy: { updatedAt: 'desc' },
-    });
-
+    const conversations = await listConversations(req.user!.id);
     res.status(200).json({
       success: true,
       data: conversations,
@@ -109,12 +108,10 @@ router.post(
   authenticate,
   validate(createConversationSchema),
   async (req, res, next) => {
-    try {
-      const conversation = await prisma.conversation.create({
-        data: {
-          userId: req.user!.id,
-          title: req.body.title?.trim() || 'New conversation',
-        },
+       try {
+      const conversation = await createConversation({
+        userId: req.user!.id,
+        title: req.body.title,
       });
 
       res.status(201).json({
